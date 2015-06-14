@@ -67,7 +67,6 @@ RestberryPassportGitHub.prototype.enable = function(next) {
 RestberryPassportGitHub.prototype.findOrCreateUser = function(profile, next) {
     var self = this;
     var User = self.restberry.auth.getUser();
-    console.log(profile)
     User.findOne({'ids.github': profile.id}, function(user) {
         next(undefined, user);
     }, function() {
