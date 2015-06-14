@@ -8,7 +8,7 @@ var DEFAULT_RETURN_URL = '/';
 var DEFAULT_SCHEMA = {
     email: {type: String, required: true, unique: true, lowercase: true},
     ids: {
-        github: {type: String, required: true},
+        github: {type: String},
     },
     image: {type: String},
     name: {
@@ -65,23 +65,31 @@ RestberryPassportGitHub.prototype.enable = function(next) {
 };
 
 RestberryPassportGitHub.prototype.findOrCreateUser = function(profile, next) {
-    var self = this;
-    var User = self.restberry.auth.getUser();
-    User.findOne({'ids.github': profile.id}, function(user) {
-        next(undefined, user);
-    }, function() {
-        var user = User._create({
-            email: profile.email,
-            ids: {
-                github: profile.id,
-            },
-            image: profile.avatar_url,
-            name: {
-                full: profile.name,
-            },
-            username: profile.login,
-        });
+    var data = {
+        email: profile.email,
+        ids: {
+            github: profile.id,
+        },
+        image: profile.avatar_url,
+        name: {
+            full: profile.name,
+        },
+        username: profile.login,
+    };
+    var query = {
+        $or: [
+            {'ids.github': profile.id},
+            {'email': profile.email},
+        ],
+    };
+    var User = this.restberry.auth.getUser();
+    User.findOne(query, function(user) {
+        user.set(data);
         user.save(function(user) {
+            next(undefined, user);
+        });
+    }, function() {
+        User.create(data, function(user) {
             next(undefined, user);
         });
     });
