@@ -3,7 +3,7 @@ Restberry-Passport-GitHub
 
 [![](https://img.shields.io/npm/v/restberry-passport-github.svg)](https://www.npmjs.com/package/restberry-passport-github) [![](https://img.shields.io/npm/dm/restberry-passport-github.svg)](https://www.npmjs.com/package/restberry-passport-github)
 
-Passport-github wrapper for Restberry.
+Restberry Passport wrapper for passport-github.
 
 ## Install
 
